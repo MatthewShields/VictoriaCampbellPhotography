@@ -11,33 +11,58 @@ const path = require("path");
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
   const pages = await graphql(`
-    {
-        prismic {
-            allProducts {
-              edges {
-                node {
-                  photo_date
-                  photo_location
-                  photo_story_text
-                  photo_story_title
-                  product_description
-                  product_name
-                  product_sku
+  {
+    prismic {
+      allPages {
+        edges {
+          node {
+            _meta {
+              uid
+            }
+            body {
+              ... on PRISMIC_PageBodyText_block {
+                primary {
+                  text_block_content
+                  text_block_title
+                }
+              }
+              ... on PRISMIC_PageBodyImage_grid {
+                type
+                primary {
+                  columns
+                }
+                fields {
+                  title
                 }
               }
             }
+            page_text
+            page_title
           }
+        }
+      }
     }
+  }
+  
   `)
-  const template = path.resolve('src/templates/post.jsx')
+  const template = path.resolve('src/templates/page.js')
   console.log(pages);
-  pages.data.prismic.allProducts.edges.forEach(edge => {
-      console.log(edge);
+  console.log(pages.data);
+  pages.data.prismic.allPages.edges.forEach(edge => {
+
+    let page_path = '/'+edge.node._meta.uid;
+    if(edge.node._meta.uid === 'index') {
+      page_path = '/';
+    }
+
+    console.log('page_path');
+    console.log(page_path);
+
     createPage({
-      path: `/${edge.node.product_sku}`,
+      path: `${page_path}`,
       component: template,
       context: {
-        uid: edge.node.product_sku,
+        uid: edge.node._meta.uid,
       },
     })
   })

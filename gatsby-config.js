@@ -16,6 +16,7 @@ module.exports = {
         repositoryName: 'victoriacampbell', // required
         defaultLang: 'en-us', // optional, but recommended
         accessToken: 'MC5YcEFyZ3hBQUFPN0Z6TTdB.77-977-977-977-9FO-_vU7vv73vv71c77-9Ce-_ve-_vTzvv71LHwU_77-977-977-977-977-977-9B2QiSDfvv70', // optional
+        shouldDownloadImage: true,
       }
     },
     {
